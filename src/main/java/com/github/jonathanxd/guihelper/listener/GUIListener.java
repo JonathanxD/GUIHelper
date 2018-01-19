@@ -35,6 +35,7 @@ import com.github.jonathanxd.guihelper.util.ItemHelper;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -94,7 +95,6 @@ public class GUIListener implements Listener {
             Player player = (Player) whoClicked;
             int slot = event.getSlot();
 
-
             Optional<ViewSection> currentView = this.guiManager.getCurrentView(player);
 
             if (currentView.isPresent()) {
@@ -103,6 +103,7 @@ public class GUIListener implements Listener {
 
                 if(inventory instanceof PlayerInventory) {
                     event.setCancelled(true);
+                    event.setResult(Event.Result.DENY);
                     return;
                 }
 
