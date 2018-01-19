@@ -54,7 +54,7 @@ public class GUIHelper {
         plugin.getServer().getServicesManager().register(GUIManager.class, guiManager, plugin, ServicePriority.Normal);
 
         plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new DynamicGuiUpdater(guiManager, plugin.getServer()),
-                5 * 20L, 5 * 20L);
+                20L, 20L);
 
         return guiManager;
     }
