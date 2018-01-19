@@ -33,24 +33,39 @@ import com.github.jonathanxd.guihelper.util.Constants;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 /**
  * Data about slot.
  */
 public final class SlotData {
-    private final ItemStack itemStack;
+    private ItemStack itemStack;
+    private final UnaryOperator<ItemStack> updater;
     private final SubHandler handler;
 
-    public SlotData(ItemStack itemStack, SubHandler handler) {
+    public SlotData(@NotNull ItemStack itemStack, @NotNull SubHandler handler, @Nullable UnaryOperator<ItemStack> updater) {
         this.itemStack = itemStack;
         this.handler = handler;
+        this.updater = updater;
     }
 
-    public SlotData(ItemStack itemStack, ClickHandler handler) {
+    public SlotData(@NotNull ItemStack itemStack, @NotNull ClickHandler handler, @Nullable UnaryOperator<ItemStack> updater) {
         this.itemStack = itemStack;
         this.handler = SubHandler.DEFAULT(handler);
+        this.updater = updater;
+    }
+
+    public SlotData(@NotNull ItemStack itemStack, @NotNull SubHandler handler) {
+        this(itemStack, handler, null);
+    }
+
+    public SlotData(@NotNull ItemStack itemStack, @NotNull ClickHandler handler) {
+        this(itemStack, handler, null);
+
     }
 
     public Optional<ItemStack> getItemStack() {
@@ -59,6 +74,19 @@ public final class SlotData {
 
     public SubHandler getHandler() {
         return handler;
+    }
+
+    public boolean canUpdate() {
+        return this.getUpdater().isPresent();
+    }
+
+    public Optional<UnaryOperator<ItemStack>> getUpdater() {
+        return Optional.ofNullable(this.updater);
+    }
+
+    public ItemStack update() {
+        this.itemStack = this.getUpdater().orElse(UnaryOperator.identity()).apply(this.itemStack);
+        return this.itemStack;
     }
 
     @Override

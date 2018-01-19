@@ -27,36 +27,46 @@
  */
 package com.github.jonathanxd.guihelper;
 
-import com.github.jonathanxd.guihelper.listener.GUIListener;
+import com.github.jonathanxd.guihelper.data.SlotData;
+import com.github.jonathanxd.guihelper.gui.InputView;
+import com.github.jonathanxd.guihelper.gui.Page;
 import com.github.jonathanxd.guihelper.manager.GUIManager;
-import com.github.jonathanxd.guihelper.manager.SimpleGUIManager;
 
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.ServicePriority;
+import org.bukkit.Server;
+import org.bukkit.entity.Player;
 
-public class GUIHelper {
+import java.util.List;
 
+public final class DynamicGuiUpdater implements Runnable {
+    private final GUIManager guiManager;
+    private final Server server;
 
-    /**
-     * Initialize GUI Helper
-     *
-     * @param plugin Plugin
-     * @return GUIManager
-     */
-    public static GUIManager init(Plugin plugin) {
-
-        plugin.getLogger().info("Initialized GUIHelper (created by TheRealBuggy)!");
-
-        GUIManager guiManager = new SimpleGUIManager(plugin);
-
-        plugin.getServer().getPluginManager().registerEvents(new GUIListener(guiManager), plugin);
-
-        plugin.getServer().getServicesManager().register(GUIManager.class, guiManager, plugin, ServicePriority.Normal);
-
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new DynamicGuiUpdater(guiManager, plugin.getServer()),
-                5 * 20L, 5 * 20L);
-
-        return guiManager;
+    public DynamicGuiUpdater(GUIManager guiManager,
+                             Server server) {
+        this.guiManager = guiManager;
+        this.server = server;
     }
 
+    @Override
+    public void run() {
+        for (Player player : server.getOnlinePlayers()) {
+            guiManager.getCurrentView(player).ifPresent(p -> {
+                if (p.inputView instanceof InputView.InvView) {
+                    InputView.InvView inputView = (InputView.InvView) p.inputView;
+                    int currentPage = p.currentPage;
+                    Page page = p.gui.getPages().get(currentPage);
+                    List<SlotData> slotDatas = page.getSlotDatas();
+                    for (int i = 0; i < slotDatas.size(); i++) {
+                        SlotData slotData = slotDatas.get(i);
+
+                        if (slotData.canUpdate()) {
+                            inputView.getInventoryView().setItem(i, slotData.update());
+                        }
+                    }
+
+                }
+
+            });
+        }
+    }
 }

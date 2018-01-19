@@ -37,12 +37,15 @@ import com.github.jonathanxd.guihelper.util.ListUtil;
 import com.github.jonathanxd.guihelper.util.PageUtil;
 
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 /**
  * GUI class
@@ -148,11 +151,19 @@ public class GUI {
         }
 
         public GUI.Builder addItem(ItemStack itemStack, Handler clickHandler) {
-            return this.addSlotData(new SlotData(itemStack, guiType.createSubHandler(ClickHandler.fromLegacy(clickHandler))));
+            return this.addItem(itemStack, clickHandler, null);
         }
 
         public GUI.Builder addItem(ItemStack itemStack, ClickHandler clickHandler) {
-            return this.addSlotData(new SlotData(itemStack, guiType.createSubHandler(clickHandler)));
+            return this.addItem(itemStack, clickHandler, null);
+        }
+
+        public GUI.Builder addItem(ItemStack itemStack, Handler clickHandler, UnaryOperator<ItemStack> updater) {
+            return this.addSlotData(new SlotData(itemStack, guiType.createSubHandler(ClickHandler.fromLegacy(clickHandler)), updater));
+        }
+
+        public GUI.Builder addItem(ItemStack itemStack, ClickHandler clickHandler, UnaryOperator<ItemStack> updater) {
+            return this.addSlotData(new SlotData(itemStack, guiType.createSubHandler(clickHandler), updater));
         }
 
         private boolean fillUnfilledSlots(SlotData slotData) {
@@ -183,12 +194,22 @@ public class GUI {
             return this;
         }
 
-        public GUI.Builder addItem(int slot, ItemStack itemStack, Handler clickHandler) {
-            return this.addSlotData(slot, new SlotData(itemStack, guiType.createSubHandler(ClickHandler.fromLegacy(clickHandler))));
+        public GUI.Builder addItem(int slot, @NotNull ItemStack itemStack, @NotNull Handler clickHandler) {
+            return this.addItem(slot, itemStack, clickHandler, null);
         }
 
-        public GUI.Builder addItem(int slot, ItemStack itemStack, ClickHandler clickHandler) {
-            return this.addSlotData(slot, new SlotData(itemStack, guiType.createSubHandler(clickHandler)));
+        public GUI.Builder addItem(int slot, @NotNull ItemStack itemStack, @NotNull ClickHandler clickHandler) {
+            return this.addItem(slot, itemStack, clickHandler, null);
+        }
+
+        public GUI.Builder addItem(int slot, @NotNull ItemStack itemStack, @NotNull Handler clickHandler,
+                                   @Nullable UnaryOperator<ItemStack> updater) {
+            return this.addSlotData(slot, new SlotData(itemStack, guiType.createSubHandler(ClickHandler.fromLegacy(clickHandler)), updater));
+        }
+
+        public GUI.Builder addItem(int slot, @NotNull ItemStack itemStack, @NotNull ClickHandler clickHandler,
+                                   @Nullable UnaryOperator<ItemStack> updater) {
+            return this.addSlotData(slot, new SlotData(itemStack, guiType.createSubHandler(clickHandler), updater));
         }
 
         private void createSlot(int slot) {
