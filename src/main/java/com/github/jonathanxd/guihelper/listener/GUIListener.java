@@ -44,6 +44,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -101,36 +102,22 @@ public class GUIListener implements Listener {
 
                 ViewSection section = currentView.get();
 
-                if(inventory instanceof PlayerInventory) {
-                    event.setCancelled(true);
-                    event.setResult(Event.Result.DENY);
-                    return;
-                }
-
                 if(section.input instanceof Input.InventoryInput) {
                     Input.InventoryInput input = (Input.InventoryInput) section.input;
 
                     if (slot > -1 && slot < inventory.getSize()) {
-
-                        event.setCancelled(true);
-
                         ItemStack currentItem = event.getCurrentItem();
-
-                        event.setCurrentItem(new ItemStack(Material.AIR));
-
-                        inventory.setItem(slot, currentItem);
 
                         if (inventory.equals(input.getInventory())) {
                             section.handleClick(player, slot, currentItem);
                         }
-
                     }
                 }
 
+                event.setCancelled(true);
+                event.setResult(Event.Result.DENY);
             }
         }
-
-
     }
 
     @EventHandler
