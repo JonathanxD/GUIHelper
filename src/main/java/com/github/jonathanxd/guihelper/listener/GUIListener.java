@@ -32,6 +32,7 @@ import com.github.jonathanxd.guihelper.gui.ViewSection;
 import com.github.jonathanxd.guihelper.manager.GUIManager;
 import com.github.jonathanxd.guihelper.util.ItemHelper;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -71,12 +72,15 @@ public class GUIListener implements Listener {
             ViewSection viewSection = currentViewOpt.get();
 
             if(viewSection.input instanceof Input.TextInput) {
-
-                viewSection.handleClick(player, 0, ItemHelper.stack(Material.BLAZE_ROD, event.getMessage()));
-
-
                 event.setMessage("");
                 event.setCancelled(true);
+
+                try {
+                    viewSection.handleClick(player, 0, ItemHelper.stack(Material.BLAZE_ROD, event.getMessage()));
+                } catch (Exception e) {
+                    player.sendMessage(ChatColor.RED + "Fatal error occurred, contact the administrator!");
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -99,6 +103,8 @@ public class GUIListener implements Listener {
             Optional<ViewSection> currentView = this.guiManager.getCurrentView(player);
 
             if (currentView.isPresent()) {
+                event.setCancelled(true);
+                event.setResult(Event.Result.DENY);
 
                 ViewSection section = currentView.get();
 
@@ -109,13 +115,16 @@ public class GUIListener implements Listener {
                         ItemStack currentItem = event.getCurrentItem();
 
                         if (inventory.equals(input.getInventory())) {
-                            section.handleClick(player, slot, currentItem);
+                            try {
+                                section.handleClick(player, slot, currentItem);
+                            } catch (Exception e) {
+                                player.sendMessage(ChatColor.RED + "Fatal error occurred, contact the administrator!");
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
 
-                event.setCancelled(true);
-                event.setResult(Event.Result.DENY);
             }
         }
     }
