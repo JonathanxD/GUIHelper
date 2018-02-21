@@ -72,11 +72,12 @@ public class GUIListener implements Listener {
             ViewSection viewSection = currentViewOpt.get();
 
             if(viewSection.input instanceof Input.TextInput) {
+                String message = event.getMessage();
                 event.setMessage("");
                 event.setCancelled(true);
 
                 try {
-                    viewSection.handleClick(player, 0, ItemHelper.stack(Material.BLAZE_ROD, event.getMessage()));
+                    viewSection.handleClick(player, 0, ItemHelper.stack(Material.BLAZE_ROD, message));
                 } catch (Exception e) {
                     player.sendMessage(ChatColor.RED + "Fatal error occurred, contact the administrator!");
                     e.printStackTrace();
