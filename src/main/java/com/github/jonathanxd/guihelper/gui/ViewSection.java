@@ -113,6 +113,14 @@ public class ViewSection {
     }
 
     public void close(Player player) {
-        this.guiManager.closeCurrentView(player);
+        this.close(player, true);
+    }
+
+    public void closeTree(Player player) {
+        this.close(player, false);
+    }
+
+    public void close(Player player, boolean openParent) {
+        this.guiManager.closeCurrentView(player, openParent);
     }
 }
