@@ -137,7 +137,7 @@ public class SimpleGUIManager implements GUIManager {
     }
 
     @Override
-    public boolean closeCurrentView(Player player) {
+    public boolean closeCurrentView(Player player, boolean openParent) {
         if (!this.playerViewSection.containsKey(player))
             return false;
 
@@ -154,7 +154,7 @@ public class SimpleGUIManager implements GUIManager {
 
             viewSection.consumeResult(player);
 
-            if (viewSection.parent != null) {
+            if (viewSection.parent != null && openParent) {
                 Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
                     if (!this.getCurrentView(player).isPresent())
                         this.openView(player, viewSection.parent);

@@ -107,7 +107,11 @@ public interface GUIManager {
 
     boolean exitCurrentView(Player player);
 
-    boolean closeCurrentView(Player player);
+    default boolean closeCurrentView(Player player) {
+        return this.closeCurrentView(player, true);
+    }
+
+    boolean closeCurrentView(Player player, boolean openParent);
 
 
 }
