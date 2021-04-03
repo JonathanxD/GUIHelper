@@ -32,6 +32,7 @@ import com.github.jonathanxd.guihelper.gui.ViewSection;
 import com.github.jonathanxd.guihelper.manager.GUIManager;
 import com.github.jonathanxd.guihelper.util.ItemHelper;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -65,25 +66,26 @@ public class GUIListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void playerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
+        Bukkit.getScheduler().runTask(this.guiManager.getPlugin(), () -> {
+            Optional<ViewSection> currentViewOpt = this.guiManager.getCurrentView(player);
 
-        Optional<ViewSection> currentViewOpt = this.guiManager.getCurrentView(player);
+            if(currentViewOpt.isPresent()) {
+                ViewSection viewSection = currentViewOpt.get();
 
-        if(currentViewOpt.isPresent()) {
-            ViewSection viewSection = currentViewOpt.get();
+                if(viewSection.input instanceof Input.TextInput) {
+                    String message = event.getMessage();
+                    event.setMessage("");
+                    event.setCancelled(true);
 
-            if(viewSection.input instanceof Input.TextInput) {
-                String message = event.getMessage();
-                event.setMessage("");
-                event.setCancelled(true);
-
-                try {
-                    viewSection.handleClick(player, 0, ItemHelper.stack(Material.BLAZE_ROD, message));
-                } catch (Exception e) {
-                    player.sendMessage(ChatColor.RED + "Fatal error occurred, contact the administrator!");
-                    e.printStackTrace();
+                    try {
+                        viewSection.handleClick(player, 0, ItemHelper.stack(Material.BLAZE_ROD, message));
+                    } catch (Exception e) {
+                        player.sendMessage(ChatColor.RED + "Fatal error occurred, contact the administrator!");
+                        e.printStackTrace();
+                    }
                 }
             }
-        }
+        });
     }
 
     @EventHandler

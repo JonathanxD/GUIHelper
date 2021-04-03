@@ -33,6 +33,7 @@ import com.github.jonathanxd.guihelper.view.ResultReceiver;
 
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -113,5 +114,5 @@ public interface GUIManager {
 
     boolean closeCurrentView(Player player, boolean openParent);
 
-
+    Plugin getPlugin();
 }

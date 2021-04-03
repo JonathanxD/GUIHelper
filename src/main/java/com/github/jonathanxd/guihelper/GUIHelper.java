@@ -45,7 +45,7 @@ public class GUIHelper {
      */
     public static GUIManager init(Plugin plugin) {
 
-        plugin.getLogger().info("Initialized GUIHelper (created by TheRealBuggy)!");
+        plugin.getLogger().info("Initialized GUIHelper (created by JonathanxD)!");
 
         GUIManager guiManager = new SimpleGUIManager(plugin);
 

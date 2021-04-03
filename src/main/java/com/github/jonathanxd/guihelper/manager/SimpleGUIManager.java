@@ -169,5 +169,8 @@ public class SimpleGUIManager implements GUIManager {
         return true;
     }
 
-
+    @Override
+    public Plugin getPlugin() {
+        return this.plugin;
+    }
 }
