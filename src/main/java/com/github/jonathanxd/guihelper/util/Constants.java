@@ -56,8 +56,8 @@ import java.util.function.UnaryOperator;
  */
 public class Constants {
 
-    public static final SlotData NEXT_PAGE_DATA = new SlotData(ItemHelper.stack(Material.EMPTY_MAP, "Proximo"), click -> click.viewSection.nextPage(click.player));
-    public static final SlotData PREVIOUS_PAGE_DATA = new SlotData(ItemHelper.stack(Material.EMPTY_MAP, "Anterior"), click -> click.viewSection.previousPage(click.player));
+    public static final SlotData NEXT_PAGE_DATA = new SlotData(ItemHelper.stack(Material.MAP, "Proximo"), click -> click.viewSection.nextPage(click.player));
+    public static final SlotData PREVIOUS_PAGE_DATA = new SlotData(ItemHelper.stack(Material.MAP, "Anterior"), click -> click.viewSection.previousPage(click.player));
 
     /**
      * An empty element that can't store anything.
